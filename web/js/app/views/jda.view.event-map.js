@@ -263,7 +263,18 @@
 			    return;
 			}
 			this.classifications = this.getClassifications(facetHeatmap);
-			if (count > 100)
+			var url = window.location.href;
+			var redDot = 'redDotThreshold=';
+			var threshold = 100;
+			if (url.contains(redDot))
+			{
+			    console.log('red dot detected');
+			    var params = url.substring(url.indexOf(redDot));
+			    var hashIndex = params.indexOf('#');
+			    threshold = parseInt(params.substring(redDot.length, hashIndex));
+			}
+			console.log('red dot threshold = ', threshold);
+			if (count > threshold)
 			    this.renderHeatmap(facetHeatmap, this.classifications);
 			else
 			{
