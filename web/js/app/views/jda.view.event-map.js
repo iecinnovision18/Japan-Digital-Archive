@@ -203,7 +203,8 @@
 			var query = this.getSearchQuery(); //"*:*";
 			var mediaFilter = this.getMediaFilter(); //"layer_type:*";
 			var timeFilter = this.getTimeFilter();
-			var solrUrl = this.solrHeatmapUrl + "fq=" + mediaFilter + "&fq=" + timeFilter + "&rows=100";
+			//var solrUrl = this.solrHeatmapUrl + "fq=" + mediaFilter + "&fq=" + timeFilter + "&rows=100";
+			var solrUrl = this.solrHeatmapUrl + "fq=" + mediaFilter + "&fq=" + timeFilter;
 			var solrDistErrPct = 0.10;  // default 0.15
 			var zoomLevel = this.map.getZoom();
 			if (zoomLevel <= 3)
@@ -212,6 +213,7 @@
 			    url: solrUrl,
 			    dataType: 'JSONP',
 			    data: {
+				rows: jda.app.redDotThreshold,
 				q: query,
 				wt: 'json',
 				facet: true,
@@ -219,7 +221,7 @@
 				'facet.heatmap.distErrPct': solrDistErrPct,
 				'facet.heatmap.geom': this._mapViewToWkt(this.map),
 				fq: "bbox_rpt"  + this._mapViewToEnvelope(this.map),  // other filters set above
-				fl: "bbox_rpt" 
+				fl: "bbox_rpt"
 			    },
 			    jsonp: 'json.wrf',
 			    success: function(data) {
@@ -274,6 +276,7 @@
 			    threshold = parseInt(params.substring(redDot.length, hashIndex));
 			}
 			console.log('red dot threshold = ', threshold);
+			jda.app.redDotThreshold = threshold;
 			if (count > threshold)
 			    this.renderHeatmap(facetHeatmap, this.classifications);
 			else
